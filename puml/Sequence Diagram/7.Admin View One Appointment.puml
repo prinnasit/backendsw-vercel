@@ -1,0 +1,23 @@
+@startuml ADMIN VIEW APPOINTMENT (GET ONE)
+
+header Dentist Sequence Diagram
+footer Page %page% of %lastpage%
+title "ADMIN VIEW APPOINTMENT (GET ONE)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<controllers>>\n:appointments" as controllersAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as AppointmentsDatabase
+
+client->server ++:req.get('/api/v1/appointments')
+server->routerAppointments ++:app.use('/api/v1/appointments', appointments)
+routerAppointments -> controllersAppointments ++:getAppointment()
+controllersAppointments->modelAppointment ++:findById(req.params.id)
+modelAppointment ->AppointmentsDatabase ++: AppointmentSchema
+AppointmentsDatabase --> modelAppointment --: appointment
+controllersAppointments <-- modelAppointment --:appointment
+controllersAppointments->client --:response
+
+@enduml

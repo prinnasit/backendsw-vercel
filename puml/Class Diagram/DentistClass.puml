@@ -1,0 +1,86 @@
+@startuml
+left to right direction
+package "Dentist"{
+    class "<<Application>>\nDentistService" as DentistService{}
+
+    class "<<Resource>>\nDentists" as ResourceDentists{
+        <<GET>> +getDentists():Dentist
+        <<POST>> +createDentist():Dentist
+    }
+
+    class "<<Resource>>\nDentist" as ResourceDentist {
+        <<GET>> +getDentist(): Dentist
+        <<PUT>> +updateDentist(): Dentist
+        <<DELETE>> +deleteDentist(): void
+    }
+
+    class "<<Representation>>\nDentist" as RepresentationDentist {
+        -name
+        -yearsOfExperience
+        -areaOfExpertise
+        -Appointment
+    }
+
+    class "<<Resource>>\nUser" as ResourceUserReg{
+        <<POST>> +register(): Token
+    }
+
+    class "<<Resource>>\nUser" as ResourceUserGetme{
+        <<GET>> +getMe(): User
+    }
+
+    class "<<Resource>>\nUser" as ResourceUserLogin {
+        <<GET>> +login(): void
+    }
+
+    class "<<Resource>>\nUser" as ResourceUserLogout {
+        <<GET>> +logout(): void
+    }
+    
+    class "<<Representation>>\nUser" as RepresentationUser {
+        -name
+        -email
+        -role
+        -password
+        -tel
+        -createdAt
+    }
+
+    class "<<Resource>>\nAppointments" as ResourceAppointments{
+        <<GET>> +getAppointments(): Appointment
+        <<POST>> +addAppointment(): Appointment
+    }
+
+    class "<<Resource>>\nAppointment" as ResourceAppointment {
+        <<GET>> +getAppointment(): Appointment
+        <<PUT>> +updateAppointment(): Appointment
+        <<DELETE>> +deleteAppointment(): void
+    }
+
+    class "<<Representation>>\nAppointment" as RepresentationAppointment {
+        -appDate
+        -user
+        -dentist
+        -createdAt
+    }
+
+}
+
+DentistService ..> ResourceDentists:"/api/v1/dentists\n<<Path>>"
+ResourceDentists ..> ResourceDentist: "/{dentistId}\n<<Path>>"
+ResourceDentist ..> RepresentationDentist: "<<use>>"
+
+DentistService ..> ResourceUserReg:"/api/v1/register\n<<Path>>"
+DentistService ..> ResourceUserGetme:"/api/v1/me\n<<Path>>"
+DentistService ..> ResourceUserLogin:"/api/v1/login\n<<Path>>"
+DentistService ..> ResourceUserLogout:"/api/v1/logout\n<<Path>>"
+ResourceUserReg ..> RepresentationUser: "<<use>>"
+ResourceUserGetme ..> RepresentationUser: "<<use>>"
+ResourceUserLogin ..> RepresentationUser: "<<use>>"
+ResourceUserLogout ..> RepresentationUser: "<<use>>"
+
+DentistService ..> ResourceAppointments:"/api/v1/appointments\n<<Path>>"
+ResourceAppointments ..> ResourceAppointment: "/{appointmentId}\n<<Path>>"
+ResourceAppointment ..> RepresentationAppointment: "<<use>>"
+@enduml
+

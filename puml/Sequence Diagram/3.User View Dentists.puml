@@ -1,0 +1,23 @@
+@startuml User View Dentists (GET ALL)
+
+header Dentist Sequence Diagram
+footer Page %page% of %lastpage%
+title "User View Dentists (GET ALL)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:dentists" as routerDentists
+participant "<<controllers>>\n:dentists" as controllersDentists
+participant "<<model>>\n:Dentist" as modelDentist
+database "<<MongoDB>>\n:dentists" as DentistsDatabase
+
+client->server ++:req.get('/api/v1/dentists')
+server->routerDentists ++:app.use('/api/v1/dentists',dentists)
+routerDentists -> controllersDentists ++:getDentists()
+controllersDentists->modelDentist ++:find()
+modelDentist ->DentistsDatabase ++: DentistSchema
+DentistsDatabase --> modelDentist --: dentist
+controllersDentists <-- modelDentist --:dentist
+controllersDentists->client --:response
+@enduml
+
